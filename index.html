@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TEAM VIGILANTS | Game Dev Unit</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- THEME CORE --- */
+        :root {
+            --bg-color: #050505;
+            --card-bg: #0f0f0f;
+            --accent: #00ffa3; /* Toxic Green */
+            --accent-dim: rgba(0, 255, 163, 0.05);
+            --text-main: #e0e0e0;
+            --text-muted: #888888;
+            --border-color: #2a2a2a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            text-decoration: none;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            background-image: 
+                linear-gradient(rgba(0, 255, 163, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 163, 0.02) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Space Mono', monospace;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+
+        .highlight { color: var(--accent); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+
+        /* --- LANDING SCREEN --- */
+        #landing-page {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: #000; z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: opacity 0.8s ease-in-out;
+        }
+        .glitch-text {
+            font-size: 4rem; font-family: 'Space Mono', monospace; color: #fff;
+            text-shadow: 2px 2px var(--accent); text-align: center;
+        }
+        .enter-btn {
+            padding: 15px 30px; font-family: 'Space Mono', monospace; font-size: 1rem;
+            color: var(--accent); background: transparent; border: 2px solid var(--accent);
+            cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .enter-btn:hover { background: var(--accent); color: #000; box-shadow: 0 0 30px var(--accent); }
+        #main-interface { opacity: 0; display: none; transition: opacity 1s ease-in; }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            text-align: center; padding: 60px 0; border-bottom: 1px solid var(--border-color); margin-bottom: 40px;
+        }
+        .hero h1 { 
+            font-size: 3.5rem; margin-bottom: 10px; 
+            display: flex; justify-content: center; align-items: center; flex-wrap: wrap;
+        }
+
+        /* --- LETTER-BY-LETTER ANIMATION (NO BLOCKS) --- */
+        @keyframes type-reveal {
+            0% { opacity: 0; transform: translateY(20px); text-shadow: none; }
+            100% { opacity: 1; transform: translateY(0); text-shadow: 0 0 10px var(--accent); }
+        }
+
+        .team-name-spaced {
+            display: inline-flex; gap: 2px; margin-left: 15px;
+        }
+        .team-name-spaced span {
+            display: inline-block; 
+            color: var(--accent); /* Pure Green Font */
+            font-weight: bold;
+            opacity: 0; /* Hidden initially */
+            animation: type-reveal 0.4s forwards; /* The Animation */
+        }
+
+        /* DELAYS FOR LETTER BY LETTER EFFECT */
+        .team-name-spaced span:nth-child(1) { animation-delay: 0.2s; }
+        .team-name-spaced span:nth-child(2) { animation-delay: 0.3s; }
+        .team-name-spaced span:nth-child(3) { animation-delay: 0.4s; }
+        .team-name-spaced span:nth-child(4) { animation-delay: 0.5s; }
+        .team-name-spaced span:nth-child(5) { animation-delay: 0.6s; }
+        .team-name-spaced span:nth-child(6) { animation-delay: 0.7s; }
+        .team-name-spaced span:nth-child(7) { animation-delay: 0.8s; }
+        .team-name-spaced span:nth-child(8) { animation-delay: 0.9s; }
+        .team-name-spaced span:nth-child(9) { animation-delay: 1.0s; }
+
+
+        .hero p { color: var(--text-muted); font-family: 'Space Mono', monospace; letter-spacing: 1px; font-size: 1.2rem; margin-top: 20px; }
+        
+        .rep-badge {
+            margin-top: 25px;
+            display: inline-block;
+        }
+        .rep-text {
+            display: block; font-family: 'Space Mono'; color: #666; font-size: 0.9rem; margin-bottom: 5px;
+        }
+        .univ-text {
+            display: block; font-family: 'Space Mono'; color: var(--accent); font-size: 1.1rem; border: 1px solid var(--accent);
+            padding: 10px 20px; background: rgba(0,255,163,0.05);
+        }
+
+        /* --- COLLABORATIVE BIO --- */
+        .mission-brief {
+            max-width: 900px; margin: 0 auto 80px auto; text-align: center;
+        }
+        .mission-brief p { font-size: 1.1rem; line-height: 1.8; color: #ccc; }
+
+        /* --- SECTION TITLES --- */
+        .section-title {
+            font-size: 1.5rem; margin-bottom: 40px; display: flex; align-items: center; gap: 15px; color: #fff;
+        }
+        .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border-color); }
+
+        /* --- MEMBERS GRID --- */
+        .members-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px; margin-bottom: 80px;
+        }
+
+        .member-card {
+            background: var(--card-bg); border: 1px solid var(--border-color); position: relative; transition: 0.3s;
+            clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
+            display: flex; flex-direction: column;
+        }
+        .member-card:hover { border-color: var(--accent); transform: translateY(-5px); }
+        
+        .img-container {
+            width: 100%;
+            height: 400px; 
+            background: #111; overflow: hidden;
+            border-bottom: 1px solid var(--border-color); display: flex; justify-content: center; align-items: center; color: #333;
+        }
+        .img-container img { 
+            width: 100%; height: 100%; object-fit: cover; transition: 0.3s; 
+        }
+
+        .member-info { padding: 30px; flex: 1; display: flex; flex-direction: column; }
+        .member-role { color: var(--accent); font-family: 'Space Mono'; font-size: 0.8rem; margin-bottom: 15px; display: block; border-bottom: 1px solid #222; padding-bottom: 10px; }
+        .member-bio { color: #aaa; font-size: 0.95rem; line-height: 1.6; margin-bottom: 25px; flex: 1; }
+        
+        .exp-tag {
+            background: #151515; padding: 8px 12px; margin-bottom: 20px; border-left: 2px solid #444;
+        }
+        .exp-tag h5 { color: #fff; font-size: 0.75rem; margin-bottom: 5px; font-family: 'Space Mono'; }
+        .exp-tag p { color: #888; font-size: 0.8rem; margin: 0; }
+
+        .uplink-bar {
+            border-top: 1px solid var(--border-color); padding-top: 15px; display: flex; flex-direction: column; gap: 8px;
+        }
+        .uplink-row { display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-size: 0.85rem; transition: 0.2s; }
+        .uplink-row:hover { color: var(--accent); }
+        .uplink-row i { width: 20px; }
+
+        /* --- RECENT OPERATIONS --- */
+        .ops-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .op-card { background: #0a0a0a; border: 1px solid #222; padding: 20px; }
+        .op-card h4 { color: #fff; margin-bottom: 5px; }
+        .op-card span { color: var(--accent); font-size: 0.75rem; font-family: 'Space Mono'; }
+        .op-card p { color: #777; font-size: 0.85rem; margin-top: 10px; }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 900px) {
+            .hero h1 { font-size: 2.5rem; flex-direction: column; gap: 10px; }
+            .team-name-spaced { margin-left: 0; }
+            .team-name-spaced span { font-size: 2rem; }
+            .ops-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="landing-page">
+        <h1 class="glitch-text">TEAM VIGILANTS</h1>
+        <p style="color: #888; margin-bottom: 40px; font-family: 'Space Mono'; letter-spacing: 3px;">INITIALIZING UNIT...</p>
+        <button class="enter-btn" onclick="enterSite()">CLICK HERE TO VIEW THE TEAM PROFILE</button>
+    </div>
+
+    <div id="main-interface">
+        <div class="container">
+            
+            <header class="hero">
+                <h1>
+                    WE ARE 
+                    <span class="highlight team-name-spaced">
+                        <span>V</span><span>I</span><span>G</span><span>I</span><span>L</span><span>A</span><span>N</span><span>T</span><span>S</span>
+                    </span>
+                </h1>
+                <p>// CHALLENGE ACCEPTED.</p>
+                
+                <div class="rep-badge">
+                    <span class="rep-text">REPRESENTING</span>
+                    <span class="univ-text"><i class="fas fa-university"></i> VELLORE INSTITUTE OF TECHNOLOGY, BHOPAL CAMPUS</span>
+                </div>
+            </header>
+
+            <section class="mission-brief">
+                <h2 class="section-title" style="justify-content: center;"><span class="highlight">>></span> MISSION DIRECTIVE</h2>
+                <p>
+                    We are an elite strike team of <strong>Sophomore Computer Science Engineers</strong>, united by a single directive: to push boundaries. We don't just play games; we deconstruct their architecture and rebuild them better.
+                </p>
+                <br>
+                <p>
+                    <strong>VIGILANTS</strong> specializes in rapid prototyping, complex system design, and high-performance mechanics. Born from the competitive fires of hackathons, we combine low-level engineering with high-level design. We are actively seeking the next "impossible" development challenge.
+                </p>
+            </section>
+
+            <section>
+                <h2 class="section-title"><span class="highlight">01.</span> THE SQUAD</h2>
+                <div class="members-grid">
+
+                    <div class="member-card">
+                        <div class="img-container">
+                            <img src="prateek.jpeg" alt="Prateek Das" onerror="this.style.display='none'; this.parentNode.innerHTML='<i class=\'fas fa-user-astronaut fa-3x\'></i>'">
+                        </div>
+                        <div class="member-info">
+                            <h3>PRATEEK DAS</h3>
+                            <span class="member-role">[ TEAM LEADER / SYSTEMS ARCHITECT ]</span>
+                            
+                            <p class="member-bio">
+                                The strategic core of the unit. Prateek specializes in low-level C++ systems, engine architecture, and defining the technical roadmap. He ensures the team's code is scalable and optimized for performance.
+                            </p>
+
+                            <div class="exp-tag">
+                                <h5>PREVIOUS DEPLOYMENTS:</h5>
+                                <p>• IIIT Lucknow Hackathon (Runner Up - AI Systems)<br>• Amity University Game Jam (3rd Prize)<br>• Void Engine Developer</p>
+                            </div>
+
+                            <div class="uplink-bar">
+                                <a href="mailto:prateek.25bce10599@vitbhopal.ac.in" class="uplink-row">
+                                    <i class="fas fa-envelope"></i> prateek.25bce10599@vitbhopal.ac.in
+                                </a>
+                                <a href="https://github.com/dev-pd-1525" target="_blank" class="uplink-row">
+                                    <i class="fab fa-github"></i> dev-pd-1525
+                                </a>
+                                <a href="https://www.linkedin.com/in/prateek-das-a45215252/" target="_blank" class="uplink-row">
+                                    <i class="fab fa-linkedin"></i> LinkedIn Profile
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="member-card">
+                        <div class="img-container">
+                            <img src="aadya.jpeg" alt="Aadya Sharma" onerror="this.style.display='none'; this.parentNode.innerHTML='<i class=\'fas fa-user-astronaut fa-3x\'></i>'">
+                        </div>
+                        <div class="member-info">
+                            <h3>AADYA SHARMA</h3>
+                            <span class="member-role">[ GAMEPLAY MECHANICS / AI LOGIC ]</span>
+                            
+                            <p class="member-bio">
+                                The behavior specialist. Aadya translates design concepts into fluid gameplay loops. She focuses on C# scripting in Unity, implementing responsive player controls and intelligent enemy AI pathfinding.
+                            </p>
+
+                            <div class="exp-tag">
+                                <h5>SPECIALIZATIONS:</h5>
+                                <p>• Unity C# Scripting<br>• Level Design Algorithms<br>• Physics-based mechanics & puzzles</p>
+                            </div>
+
+                            <div class="uplink-bar">
+                                <a href="mailto:aadya.25bce11123@vitbhopal.ac.in" class="uplink-row">
+                                    <i class="fas fa-envelope"></i> aadya.25bce11123@vitbhopal.ac.in
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="member-card">
+                        <div class="img-container">
+                            <img src="dipika.jpeg" alt="Dipika Anand" onerror="this.style.display='none'; this.parentNode.innerHTML='<i class=\'fas fa-user-astronaut fa-3x\'></i>'">
+                        </div>
+                        <div class="member-info">
+                            <h3>DIPIKA ANAND</h3>
+                            <span class="member-role">[ VFX / UI / VISUAL POLISH ]</span>
+                            
+                            <p class="member-bio">
+                                The visual engineer. Dipika bridges the gap between code and art. She is responsible for shader implementation, particle effects, and creating intuitive, cyber-aesthetic User Interfaces that enhance game feel.
+                            </p>
+
+                            <div class="exp-tag">
+                                <h5>CREATIVE TECH:</h5>
+                                <p>• Dynamic UI/UX Flow<br>• Particle Systems Engineering<br>• Visual Storytelling & Asset Integration</p>
+                            </div>
+
+                            <div class="uplink-bar">
+                                <a href="mailto:dipika.25bce10703@vitbhopal.ac.in" class="uplink-row">
+                                    <i class="fas fa-envelope"></i> dipika.25bce10703@vitbhopal.ac.in
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title"><span class="highlight">02.</span> RECENT OPERATIONS</h2>
+                <div class="ops-grid">
+                    <div class="op-card">
+                        <h4>PROJECT: NEON RUNNER</h4>
+                        <span>STATUS: COMPLETE // OPTIMIZED</span>
+                        <p>Successfully deployed a mobile-ready endless runner. Team Vigilants implemented object pooling to reduce garbage collection overhead by 40%.</p>
+                    </div>
+                    <div class="op-card">
+                        <h4>PROJECT: VOID ENGINE</h4>
+                        <span>STATUS: ONGOING // R&D</span>
+                        <p>Developing a custom 2D rendering engine. Current focus on implementing a robust Entity Component System (ECS) for massive sprite rendering.</p>
+                    </div>
+                </div>
+            </section>
+
+            <footer style="border-top: 1px solid #222; margin-top: 60px; padding-top: 30px; padding-bottom: 30px; font-size: 0.8rem; color: #555; text-align: center; font-family: 'Space Mono';">
+                <p>All rights reserved by Team Vigilants. End of line.</p>
+            </footer>
+
+        </div>
+    </div>
+
+    <script>
+        function enterSite() {
+            const landing = document.getElementById('landing-page');
+            const main = document.getElementById('main-interface');
+            
+            landing.style.opacity = '0';
+            setTimeout(() => {
+                landing.style.display = 'none';
+                main.style.display = 'block';
+                void main.offsetWidth; // Trigger reflow
+                main.style.opacity = '1';
+            }, 800);
+        }
+    </script>
+</body>
+</html>
